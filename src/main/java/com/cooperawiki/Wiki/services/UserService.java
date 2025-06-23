@@ -11,7 +11,10 @@ import com.cooperawiki.Wiki.domain.repositories.DiscordAccountRepository;
 import com.cooperawiki.Wiki.domain.repositories.UserRepository;
 import com.cooperawiki.Wiki.infra.mappers.dto.input.UserInputDto;
 
+import jakarta.transaction.Transactional;
+
 @Service
+@Transactional
 public class UserService {
     @Autowired
     private UserRepository userRepository;
@@ -22,14 +25,14 @@ public class UserService {
         return userRepository.findAll();
     }
 
-    public User getUser(Long id) {
-        return userRepository.findById(id).orElseThrow(null);
+    public User getUserById(Long id) throws Exception {
+        return userRepository.findById(id).orElseThrow(() -> new Exception("Usuario não encontrado"));
     }
 
     public User createUser(UserInputDto dto) {
-        User newUser = new User(dto, null);
-        
-        createDiscordAccount(dto.discordUsername(), dto.discordId());
+        DiscordAccount discordAccount = createDiscordAccount(dto.discordUsername(), dto.discordId());
+
+        User newUser = new User(dto, discordAccount);        
 
         return userRepository.save(newUser);
     }

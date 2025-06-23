@@ -3,6 +3,7 @@ package com.cooperawiki.Wiki.services;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.cooperawiki.Wiki.domain.enums.Theme;
 import com.cooperawiki.Wiki.domain.models.Company;
@@ -13,6 +14,10 @@ import com.cooperawiki.Wiki.domain.repositories.ConfigRepository;
 import com.cooperawiki.Wiki.infra.mappers.dto.input.CompanyInputDto;
 import com.cooperawiki.Wiki.infra.mappers.dto.input.ConfigInputDto;
 
+import jakarta.transaction.Transactional;
+
+@Service
+@Transactional
 public class CompanyService {
     @Autowired private CompanyRepository companyRepository;
 
@@ -24,17 +29,14 @@ public class CompanyService {
         return companyRepository.findAll();
     }
 
-    public Company getCompanyById(Long id) {
-        return companyRepository.findById(id).orElseThrow(null);
+    public Company getCompanyById(Long id)  throws Exception {
+        return companyRepository.findById(id).orElseThrow(() -> new Exception("Empresa / Cooperativa não encontrada"));
     }
 
     public Company createCompany(CompanyInputDto dto) throws Exception {
-        User representanteMaster = userService.getUser(dto.masterId());
-        Config config = createDefaultConfig(dto);
+        User representanteMaster = userService.getUserById(dto.masterId());
 
-        if(representanteMaster.equals(null)) {
-            throw new Exception("Sem representante!"); // Mudar para uma exceção personalizada.
-        }
+        Config config = createDefaultConfig(dto);
 
         Company newCompany = new Company(dto, representanteMaster, config);
 

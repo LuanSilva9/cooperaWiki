@@ -28,8 +28,8 @@ public class UserController {
     } 
 
     @GetMapping("/{id}")
-    public ResponseEntity<User> getUser(@PathVariable Long id) {
-        return ResponseEntity.ok().body(userService.getUser(id));
+    public ResponseEntity<User> getUser(@PathVariable Long id) throws Exception {
+        return ResponseEntity.ok().body(userService.getUserById(id));
     }
 
     @PostMapping

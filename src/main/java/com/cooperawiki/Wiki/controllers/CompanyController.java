@@ -29,7 +29,7 @@ public class CompanyController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Company> getCompanyById(@PathVariable Long id) {
+    public ResponseEntity<Company> getCompanyById(@PathVariable Long id) throws Exception{
         return ResponseEntity.ok().body(companyService.getCompanyById(id));
     }
 
