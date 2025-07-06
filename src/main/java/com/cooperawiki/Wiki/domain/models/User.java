@@ -50,8 +50,12 @@ public class User {
     private DiscordAccount discordAccount;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonBackReference("userId")
+    @JsonBackReference("accessUserId")
     private List<Access> access;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonBackReference("likedUserId")
+    private List<Relevance> liked;
 
     public User(UserInputDto dto, DiscordAccount discordAccount) {
         this.name = dto.name();

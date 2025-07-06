@@ -1,5 +1,10 @@
 package com.cooperawiki.Wiki.domain.models;
 
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.util.UUID;
+
+import com.cooperawiki.Wiki.domain.enums.TypeContent;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.Entity;
@@ -16,34 +21,35 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "access")
+@Table(name = "relevance")
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(of = "id")
-public class Access {
+public class Relevance {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id;
 
     @ManyToOne
     @JoinColumn(name = "userId", referencedColumnName = "id")
-    @JsonManagedReference("accessUserId")
+    @JsonManagedReference("likedUserId")
     private User user;
 
-    @ManyToOne
-    @JoinColumn(name = "companyId", referencedColumnName = "id")
-    @JsonManagedReference("companyId")
-    private Company company;
+    private UUID targetId;
+    private TypeContent targetType; 
 
-    @ManyToOne
-    @JoinColumn(name = "roleId", referencedColumnName = "id")
-    private Role role;
+    private Boolean liked; 
 
-    public Access(User user, Company company, Role role) {
+    private ZonedDateTime reactedAt;
+
+    public Relevance(User user, UUID targetId, TypeContent typeRelevance, Boolean liked) {
         this.user = user;
-        this.company = company;
-        this.role = role;
+        this.targetId = targetId;
+        this.targetType = typeRelevance;
+        this.liked = liked;
+        
+        this.reactedAt = ZonedDateTime.now(ZoneId.of("America/Sao_Paulo"));
     }
 }

@@ -18,8 +18,6 @@ public class RoleService {
     @Autowired private RoleRepository roleRepository;
     @Autowired private CompanyService companyService;
 
-    // CUD Here
-
     public Role createRole(RoleInputDto dto) throws Exception{
         Company company = companyService.getCompanyById(dto.companyId());
 

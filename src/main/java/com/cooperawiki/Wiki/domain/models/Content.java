@@ -4,8 +4,10 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.UUID;
 
-import com.cooperawiki.Wiki.infra.mappers.dto.input.TopicInputDto;
+import com.cooperawiki.Wiki.domain.enums.TypeContent;
+import com.cooperawiki.Wiki.infra.mappers.dto.input.ContentInputDto;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -20,41 +22,52 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "topics")
+@Table(name = "contents")
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(of = "id")
-public class Topic {
+public class Content {
+
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
     @ManyToOne
-    @JoinColumn(name = "authorId", referencedColumnName = "id")
-    private User author;
-    
+    @JoinColumn(name = "head_id")
+    private Content head;
+
     @ManyToOne
-    @JoinColumn(name = "companyId", referencedColumnName = "id")
+    @JoinColumn(name = "author_id", referencedColumnName = "id")
+    private User author;
+
+    @ManyToOne
+    @JoinColumn(name = "company_id", referencedColumnName = "id")
     private Company company;
 
     private String title;
 
+    @Column(length = 10000)
     private String contentMarkdown;
 
     private Integer relevance;
+    private TypeContent typeContent;
+
 
     private ZonedDateTime createdAt;
     private ZonedDateTime updatedAt;
 
-    public Topic(TopicInputDto dto, User author, Company company) {
+    public Content(ContentInputDto dto, User author, Company company, Content head) {
         this.author = author;
         this.company = company;
         this.title = dto.title();
         this.contentMarkdown = dto.contentMarkdown();
+        this.typeContent = dto.typeContent();
 
         this.relevance = 0;
+
         this.createdAt = ZonedDateTime.now(ZoneId.of("America/Sao_Paulo"));
+        this.head = head;
     }
 }
