@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.cooperawiki.Wiki.domain.enums.Theme;
+import com.cooperawiki.Wiki.domain.enums.TypeRoleAccess;
 import com.cooperawiki.Wiki.domain.models.Access;
 import com.cooperawiki.Wiki.domain.models.Company;
 import com.cooperawiki.Wiki.domain.models.Config;
@@ -46,8 +47,8 @@ public class CompanyService {
         Config config = createDefaultConfig(dto);
 
         Company newCompany = companyRepository.save(new Company(dto, representanteMaster, config));
-
-        Role master = createRole(new RoleInputDto(newCompany.getId(), "MASTER"));
+ 
+        Role master = createRole(new RoleInputDto(newCompany.getId(), "MASTER", TypeRoleAccess.MASTER));
 
         Access newAccess = new Access(representanteMaster, newCompany, master);
 

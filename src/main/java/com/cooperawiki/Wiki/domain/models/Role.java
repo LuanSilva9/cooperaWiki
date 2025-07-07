@@ -1,5 +1,6 @@
 package com.cooperawiki.Wiki.domain.models;
 
+import com.cooperawiki.Wiki.domain.enums.TypeRoleAccess;
 import com.cooperawiki.Wiki.infra.mappers.dto.input.RoleInputDto;
 
 import jakarta.persistence.Entity;
@@ -32,6 +33,8 @@ public class Role {
     private Company company;
 
     private String role;
+    
+    private TypeRoleAccess typeRoleAccess;
 
     public Role(Company company, RoleInputDto dto) {
         this.company = company;
